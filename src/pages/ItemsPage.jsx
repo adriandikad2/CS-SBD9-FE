@@ -28,7 +28,7 @@ const ItemsPage = () => {
   const fetchItems = async () => {
     try {
       setLoading(true)
-      const response = await axios.get("/api/item")
+      const response = await axios.get("/api/items")
       setItems(response.data.payload)
       setError(null)
     } catch (err) {
