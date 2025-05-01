@@ -1,8 +1,8 @@
 import axios from "axios"
 
-// Create an axios instance with default config
+// Get API base URL from environment variables
 const api = axios.create({
-  baseURL: "/api", // Assuming your backend API is served at /api
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api", // Default to local if not set
   headers: {
     "Content-Type": "application/json",
   },
@@ -24,9 +24,7 @@ api.interceptors.request.use(
 
 // Add a response interceptor to handle common errors
 api.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   (error) => {
     if (error.response) {
       // Handle 401 Unauthorized errors
