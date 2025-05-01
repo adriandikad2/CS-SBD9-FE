@@ -1,57 +1,49 @@
-import axios from "axios"
+import axios from "axios";
 
-// Get API base URL from environment variables
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api", // Default to local if not set
+  baseURL: process.env.REACT_APP_API_URL || "/api", // Fallback to /api for local development
   headers: {
     "Content-Type": "application/json",
   },
-})
+});
 
-// Add a request interceptor to include auth token
+// Add request interceptor for authorization
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return config
+    return config;
   },
   (error) => {
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
-// Add a response interceptor to handle common errors
+// Add response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      // Handle 401 Unauthorized errors
       if (error.response.status === 401) {
-        localStorage.removeItem("token")
-        window.location.href = "/login"
+        localStorage.removeItem("token");
+        window.location.href = "/login";
       }
-
-      // Handle 403 Forbidden errors
       if (error.response.status === 403) {
-        console.error("Access forbidden")
+        console.error("Access forbidden");
       }
-
-      // Handle 500 Server errors
       if (error.response.status >= 500) {
-        console.error("Server error")
+        console.error("Server error");
       }
     } else if (error.request) {
-      // The request was made but no response was received
-      console.error("Network error")
+      console.error("Network error");
     } else {
-      // Something happened in setting up the request
-      console.error("Request error", error.message)
+      console.error("Request error", error.message);
     }
 
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
-export default api
+export default api;
