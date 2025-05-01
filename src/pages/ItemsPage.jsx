@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import axios from "axios"
+import axios from "../api/axios" // Import your axios instance
 import { Search, X, ShoppingCart } from "lucide-react"
 import ItemCard from "../components/ItemCard"
 import ItemModal from "../components/ItemModal"
@@ -28,7 +28,7 @@ const ItemsPage = () => {
   const fetchItems = async () => {
     try {
       setLoading(true)
-      const response = await axios.get("api/item")
+      const response = await axios.get("/item") // Use axios instance with base URL
       setItems(response.data.payload)
       setError(null)
     } catch (err) {
